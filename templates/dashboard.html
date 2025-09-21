@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - NEXUS{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Welcome Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="mb-1">Welcome back, {{ user.username }}! 🎓</h2>
+                            <p class="text-muted mb-0">{{ streak_status.status }}</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="streak-counter">{{ streak_status.current_streak }}</div>
+                            <small class="text-muted">Day Streak</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Left Column -->
+        <div class="col-lg-8">
+            <!-- Daily Check-in Card -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-calendar-check me-2"></i>Daily Check-in
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if streak_status.can_checkin %}
+                        <form method="POST" action="{{ url_for('daily_checkin') }}">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="study_time" class="form-label">
+                                            <i class="fas fa-clock me-1"></i>Study Time (minutes)
+                                        </label>
+                                        <input type="number" class="form-control" id="study_time" name="study_time" min="1" max="1440" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">
+                                            <i class="fas fa-book me-1"></i>Subjects Studied
+                                        </label>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="subjects" value="Mathematics" id="math">
+                                                    <label class="form-check-label" for="math">Mathematics</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="subjects" value="Science" id="science">
+                                                    <label class="form-check-label" for="science">Science</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="subjects" value="English" id="english">
+                                                    <label class="form-check-label" for="english">English</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="subjects" value="History" id="history">
+                                                    <label class="form-check-label" for="history">History</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="subjects" value="Programming" id="programming">
+                                                    <label class="form-check-label" for="programming">Programming</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="subjects" value="Other" id="other">
+                                                    <label class="form-check-label" for="other">Other</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="notes" class="form-label">
+                                    <i class="fas fa-sticky-note me-1"></i>Study Notes (Optional)
+                                </label>
+                                <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="What did you learn today? Any challenges or breakthroughs?"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-check me-2"></i>Complete Check-in
+                            </button>
+                        </form>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                            <h5>You've already checked in today!</h5>
+                            <p class="text-muted">Come back tomorrow to continue your streak.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-history me-2"></i>Recent Activity
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_checkins %}
+                        <div class="timeline">
+                            {% for checkin in recent_checkins %}
+                                <div class="d-flex mb-3">
+                                    <div class="flex-shrink-0">
+                                        <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                            <i class="fas fa-calendar-day text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="mb-1">{{ checkin.date.strftime('%B %d, %Y') if checkin.date else 'Recent' }}</h6>
+                                        <p class="mb-1">
+                                            <i class="fas fa-clock me-1"></i>{{ checkin.study_time }} minutes
+                                            {% if checkin.subjects %}
+                                                <span class="ms-2">
+                                                    <i class="fas fa-book me-1"></i>{{ checkin.subjects|join(', ') }}
+                                                </span>
+                                            {% endif %}
+                                        </p>
+                                        {% if checkin.notes %}
+                                            <small class="text-muted">{{ checkin.notes }}</small>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-calendar-plus fa-3x text-muted mb-3"></i>
+                            <h6>No activity yet</h6>
+                            <p class="text-muted">Complete your first check-in to start tracking your progress!</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-lg-4">
+            <!-- Virtual Weather -->
+            <div class="weather-widget weather-{{ weather.condition }} mb-4">
+                <h5 class="mb-2">
+                    <i class="fas fa-{% if weather.condition == 'sunny' %}sun{% elif weather.condition == 'partly-cloudy' %}cloud-sun{% elif weather.condition == 'cloudy' %}cloud{% else %}cloud-rain{% endif %} me-2"></i>
+                    Classroom Weather
+                </h5>
+                <p class="mb-0">{{ weather.description }}</p>
+            </div>
+
+            <!-- Stats Card -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-bar me-2"></i>Your Stats
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6 mb-3">
+                            <div class="border-end">
+                                <h4 class="text-primary mb-1">{{ user.total_study_time }}</h4>
+                                <small class="text-muted">Total Hours</small>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <h4 class="text-success mb-1">{{ user.badges|length }}</h4>
+                            <small class="text-muted">Badges Earned</small>
+                        </div>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-12">
+                            <h4 class="text-warning mb-1">{{ streak_status.current_streak }}</h4>
+                            <small class="text-muted">Current Streak</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Badges -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-trophy me-2"></i>Your Badges
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if user.badges %}
+                        <div class="row">
+                            {% for badge in user.badges %}
+                                <div class="col-6 mb-2">
+                                    <div class="badge-item">
+                                        <i class="fas fa-medal fa-2x text-warning mb-2"></i>
+                                        <h6 class="mb-0">{{ badge }}</h6>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-3">
+                            <i class="fas fa-trophy fa-3x text-muted mb-3"></i>
+                            <h6>No badges yet</h6>
+                            <p class="text-muted small">Start checking in daily to earn your first badge!</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Auto-focus on study time input if check-in is available
+    document.addEventListener('DOMContentLoaded', function() {
+        const studyTimeInput = document.getElementById('study_time');
+        if (studyTimeInput) {
+            studyTimeInput.focus();
+        }
+    });
+
+    // Form validation
+    document.querySelector('form')?.addEventListener('submit', function(e) {
+        const studyTime = document.getElementById('study_time').value;
+        const subjects = document.querySelectorAll('input[name="subjects"]:checked');
+        
+        if (studyTime < 1) {
+            e.preventDefault();
+            alert('Please enter a valid study time (at least 1 minute).');
+            return;
+        }
+        
+        if (subjects.length === 0) {
+            e.preventDefault();
+            alert('Please select at least one subject you studied.');
+            return;
+        }
+    });
+</script>
+{% endblock %}
