@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <h1 class="hero-title">Welcome to NEXUS</h1>
+        <p class="hero-subtitle">
+            Transform your learning journey with intelligent engagement, streak tracking, and collaborative growth
+        </p>
+        
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-fire fa-3x text-warning mb-3"></i>
+                                <h5 class="card-title">Build Study Streaks</h5>
+                                <p class="card-text">Track daily learning activities and build powerful study habits that last.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-trophy fa-3x text-warning mb-3"></i>
+                                <h5 class="card-title">Earn Badges</h5>
+                                <p class="card-text">Unlock achievements and showcase your learning milestones.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                                <h5 class="card-title">Smart Groups</h5>
+                                <p class="card-text">Connect with like-minded learners through intelligent matching.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-cloud-sun fa-3x text-info mb-3"></i>
+                                <h5 class="card-title">Virtual Weather</h5>
+                                <p class="card-text">Watch your digital classroom environment reflect your engagement.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-5">
+            <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg me-3">
+                <i class="fas fa-rocket me-2"></i>Start Your Journey
+            </a>
+            <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-sign-in-alt me-2"></i>Login
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-12 text-center text-white">
+            <h2 class="mb-4">Why Choose NEXUS?</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <i class="fas fa-brain fa-2x text-primary mb-3"></i>
+                            <h5>Intelligent Tracking</h5>
+                            <p>Advanced algorithms analyze your learning patterns to provide personalized insights and recommendations.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <i class="fas fa-heart fa-2x text-danger mb-3"></i>
+                            <h5>Habit Building</h5>
+                            <p>Scientifically-proven streak mechanics help you build lasting study habits that stick.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <i class="fas fa-globe fa-2x text-success mb-3"></i>
+                            <h5>Community Impact</h5>
+                            <p>Leave your mark with legacy building and inspire future learners in your community.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
